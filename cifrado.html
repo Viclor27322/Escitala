@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cifrado Escítala</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Cifrado Escítala</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="mensaje">Mensaje:</label>
+                    <input type="text" class="form-control" id="mensaje" placeholder="Introduce tu mensaje" />
+                </div>
+                <div class="form-group">
+                    <label for="key">Número de vueltas:</label>
+                    <input type="number" class="form-control" id="key" placeholder="Número de vueltas" />
+                </div>
+                <button class="btn btn-primary" onclick="encrypt()">Cifrar</button>
+                <button class="btn btn-secondary" onclick="decrypt()">Descifrar</button>
+            </div>
+            <div class="col-md-6">
+                <h2>Texto Cifrado:</h2>
+                <div class="alert alert-primary" id="textE"></div>
+
+                <h2>Texto Descifrado:</h2>
+                <div class="alert alert-success" id="textD"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function encrypt() {
+            const mensaje = document.getElementById("mensaje").value;
+            const key = parseInt(document.getElementById("key").value, 10);
+            const encryptedmensaje = escitalaEncrypt(mensaje, key);
+            document.getElementById("textE").textContent = encryptedmensaje;
+        }
+
+        function decrypt() {
+            const encryptedmensaje = document.getElementById("textE").textContent;
+            const key = parseInt(document.getElementById("key").value, 10);
+            const decryptedmensaje = escitalaDecrypt(encryptedmensaje, key);
+            document.getElementById("textD").textContent = decryptedmensaje;
+        }
+
+        function escitalaEncrypt(mensaje, key) {
+            const rows = Math.ceil(mensaje.length / key);
+            const result = new Array(rows);
+
+            for (let i = 0; i < rows; i++) {
+                result[i] = new Array(key);
+            }
+
+            let index = 0;
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < key; j++) {
+                    if (index < mensaje.length) {
+                        result[i][j] = mensaje[index];
+                        index++;
+                    } else {
+                        result[i][j] = ' ';
+                    }
+                }
+            }
+
+            let encryptedmensaje = '';
+            for (let j = 0; j < key; j++) {
+                for (let i = 0; i < rows; i++) {
+                    encryptedmensaje += result[i][j];
+                }
+            }
+
+            return encryptedmensaje;
+        }
+
+        function escitalaDecrypt(encryptedmensaje, key) {
+            const rows = Math.ceil(encryptedmensaje.length / key);
+            const result = new Array(rows);
+
+            for (let i = 0; i < rows; i++) {
+                result[i] = new Array(key);
+            }
+
+            let index = 0;
+
+            for (let j = 0; j < key; j++) {
+                for (let i = 0; i < rows; i++) {
+                    result[i][j] = encryptedmensaje[index];
+                    index++;
+                }
+            }
+
+            let decryptedmensaje = '';
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < key; j++) {
+                    decryptedmensaje += result[i][j];
+                }
+            }
+
+            return decryptedmensaje.trim(); // Elimina espacios en blanco al final
+        }
+    </script>
+</body>
+</html>
